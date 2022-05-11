@@ -71,8 +71,10 @@ void Population::setTrait(const float mSize) {
         sH[i] = agent_ran_trait(rng);
         sN[i] = agent_ran_trait(rng);
 
-        bodysize[i] = agent_ran_size(rng);
-        range_perception[i] = agent_ran_perception(rng);
+        // bodysize[i] = agent_ran_size(rng);
+        // if(bodysize[i] < 0.001f) bodysize[i] = 0.001f;
+        // range_perception[i] = agent_ran_perception(rng);
+        // if(range_perception[i] < 0.001f) range_perception[i] = 0.001f;
     }
 }
 

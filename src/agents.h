@@ -29,7 +29,7 @@ public:
         sF (popsize, 0.f),
         sH (popsize, 0.f),
         sN (popsize, 0.f),
-        bodysize(popsize, 5.0f),
+        bodysize(popsize, 10.0f),
         cost_bodysize(cost_bodysize),
         
         // counters for handling and social metrics
