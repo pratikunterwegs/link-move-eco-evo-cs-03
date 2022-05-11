@@ -84,7 +84,7 @@ Rcpp::List simulation::do_simulation() {
         }
 
         // reproduce
-        pop.Reproduce(food, dispersal, mProb, mSize);
+        pop.Reproduce(food, dispersal, mProb, mSize, tmax);
 
         // generation ends here
     }
