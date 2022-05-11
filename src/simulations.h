@@ -32,6 +32,7 @@ public:
         scenario(scenario),
         tmax(tmax),
         genmax(genmax),
+        dispersal(dispersal),
 
         // parallelisation
         nThreads (nThreads),
@@ -45,14 +46,14 @@ public:
     Population pop;
     Resources food;
     const int scenario, tmax, genmax;
+    const float dispersal;
     
     int nThreads;
     
     const float mProb, mSize;
 
     // funs
-    Rcpp::List do_simulation_mechanistic();
-    Rcpp::List do_simulation_optimal();
+    Rcpp::List do_simulation();
 
 };
 
