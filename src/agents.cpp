@@ -494,7 +494,7 @@ void Population::move_optimal(const Resources &food, const int nThreads) {
             }
             // distance to be moved
             moved[id] += (bodysize[id] / size_scale);
-            energy[id] -= (costMove * bodysize[id] / size_scale);
+            energy[id] -= (cost_move * bodysize[id] / size_scale);
 
             // set locations
             coordX[id] = newX; coordY[id] = newY;

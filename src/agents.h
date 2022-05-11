@@ -15,7 +15,9 @@
 // Agent class
 struct Population {
 public:
-    Population(const int popsize, const float range_perception, const int handling_time, const float costMove, const float size_scale, const int scenario) :
+    Population(const int popsize, const float range_perception, const int handling_time, const float cost_move, 
+    const float cost_bodysize, const float cost_perception,
+    const float size_scale, const int scenario) :
         // agents, positions, energy and traits
         nAgents (popsize),
         coordX (popsize, 0.0f),
@@ -46,7 +48,7 @@ public:
         
         // distance moved and movement parameters
         moved(popsize, 0.f),
-        costMove(costMove),
+        cost_move(cost_move),
         size_scale(size_scale),
 
         // a network object
@@ -86,7 +88,7 @@ public:
 
     // movement distances, costs, and size scaling
     std::vector<float> moved;
-    const float costMove, size_scale;
+    const float cost_move, size_scale;
 
     // position rtree
     bgi::rtree< value, bgi::quadratic<16> > agentRtree;
