@@ -1,0 +1,59 @@
+#ifndef SIMULATIONS_H
+#define SIMULATIONS_H
+
+#include "data_types.h"
+#include "landscape.h"
+#include "agents.h"
+
+class simulation {
+public:
+    simulation(const int popsize, const int scenario,
+               const int nItems, const float landsize,
+               const int nClusters,
+               const float clusterSpread,
+               const int handling_time,
+               const int regen_time,
+               const int tmax,
+               const int genmax,
+               const float cost_perception,
+               const float cost_bodysize,
+               const float cost_move,
+               const float size_scale,
+               const float dispersal,
+               const int nThreads,
+               const float mProb,
+               const float mSize):
+        // population, food, and data structures
+        pop (popsize, handling_time, cost_perception,
+            cost_bodysize, cost_move, size_scale, scenario),
+        food(nItems, landsize, nClusters, clusterSpread, regen_time),
+        
+        // eco-evolutionary parameters
+        scenario(scenario),
+        tmax(tmax),
+        genmax(genmax),
+
+        // parallelisation
+        nThreads (nThreads),
+
+        // mutation probability and step size
+        mProb(mProb),
+        mSize(mSize)
+    {}
+    ~simulation() {}
+
+    Population pop;
+    Resources food;
+    const int scenario, tmax, genmax;
+    
+    int nThreads;
+    
+    const float mProb, mSize;
+
+    // funs
+    Rcpp::List do_simulation_mechanistic();
+    Rcpp::List do_simulation_optimal();
+
+};
+
+#endif // SIMULATIONS_H
