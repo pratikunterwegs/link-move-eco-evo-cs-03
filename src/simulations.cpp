@@ -131,7 +131,7 @@ Rcpp::List simulation::do_simulation() {
 //' parameter of a Cauchy distribution. 
 //' @return An S4 class, `pathomove_output`, with simulation outcomes.
 // [[Rcpp::export]]
-S4 model_case_2(const int popsize, const int scenario,
+S4 run_model(const int popsize, const int scenario,
                const int nItems, const float landsize,
                const int nClusters,
                const float clusterSpread,
