@@ -632,7 +632,7 @@ std::vector<float> Population::handleFitness(const float time) {
 
 // fun for replication
 void Population::Reproduce(const Resources food,
-    const float dispersal, const float mProb, const float mSize) 
+    const float dispersal, const float mProb, const float mSize, const float time) 
 {
     // mutation probability and size distribution --- inefficient but oh well
     std::bernoulli_distribution mutation_happens(mProb);
@@ -641,7 +641,7 @@ void Population::Reproduce(const Resources food,
     // choose the range over which individuals are dispersed
     std::normal_distribution<float> sprout(0.f, dispersal);
     std::vector<float> vecFitness;
-    vecFitness = handleFitness();
+    vecFitness = handleFitness(time);
 
     // set up weighted lottery
     std::discrete_distribution<> weightedLottery(vecFitness.begin(), vecFitness.end());
@@ -650,8 +650,8 @@ void Population::Reproduce(const Resources food,
     std::vector<float> tmp_sF (nAgents, 0.f);
     std::vector<float> tmp_sH (nAgents, 0.f);
     std::vector<float> tmp_sN (nAgents, 0.f);
-    std::vector<float> tmp_bodysize (nAgent, 0.01f);
-    std::vector<float> tmp_range_perception (nAgent, 0.01f);
+    std::vector<float> tmp_bodysize (nAgents, 0.01f);
+    std::vector<float> tmp_range_perception (nAgents, 0.01f);
     
     // reset associations
     associations = std::vector<int> (nAgents, 0);

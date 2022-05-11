@@ -129,11 +129,12 @@ public:
     void doForage(Resources &food);
     
     // funs to handle fitness and reproduce
-    std::vector<float> handleFitness();
+    std::vector<float> handleFitness(const float time);
     void Reproduce(const Resources food, 
         const float dispersal,
         const float mProb,
-        const float mSize
+        const float mSize,
+        const float time
     );
     
     // counting proximity based interactions
