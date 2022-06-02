@@ -10,7 +10,6 @@ Rcpp::DataFrame Population::returnPopData() {
         Named("sH") = sH,
         Named("sN") = sN,
         Named("bodysize") = bodysize,
-        Named("percept") = range_perception,
         Named("x") = initX,
         Named("y") = initY,
         Named("xn") = coordX,

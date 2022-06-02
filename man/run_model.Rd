@@ -15,10 +15,9 @@ run_model(
   regen_time,
   tmax,
   genmax,
-  cost_perception,
+  range_perception,
   cost_bodysize,
-  cost_move,
-  size_scale,
+  range_move,
   dispersal,
   nThreads,
   mProb,
@@ -47,6 +46,8 @@ run_model(
 
 \item{genmax}{The maximum number of generations per simulation.}
 
+\item{range_perception}{The movement range for agents.}
+
 \item{dispersal}{A float value; the standard deviation of a normal
 distribution centred on zero, which determines how far away from its parent
 each individual is initialised. The standard value is 5 percent of the
@@ -62,8 +63,6 @@ value and \code{popsize} to test the simulation's sensitivity to these values.}
 
 \item{mSize}{Controls the mutational step size, and represents the scale
 parameter of a Cauchy distribution.}
-
-\item{range_perception}{The movement range for agents.}
 }
 \value{
 An S4 class, \code{pathomove_output}, with simulation outcomes.

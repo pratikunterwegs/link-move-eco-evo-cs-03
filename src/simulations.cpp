@@ -144,10 +144,9 @@ S4 run_model(const int popsize, const int scenario,
                const int regen_time,
                const int tmax,
                const int genmax,
-               const float cost_perception,
+               const float range_perception,
                const float cost_bodysize,
-               const float cost_move,
-               const float size_scale,
+               const float range_move,
                const float dispersal,
                const int nThreads,
                const float mProb,
@@ -156,8 +155,8 @@ S4 run_model(const int popsize, const int scenario,
     // make simulation class with input parameters                            
     simulation this_sim(popsize, scenario, nItems, landsize,
         nClusters, clusterSpread, handling_time, regen_time,
-        tmax, genmax, cost_perception, cost_bodysize,
-        cost_move, size_scale, dispersal, nThreads,
+        tmax, genmax, range_perception, cost_bodysize,
+        range_move, dispersal, nThreads,
         mProb, mSize
     );
 

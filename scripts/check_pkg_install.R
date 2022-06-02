@@ -1,6 +1,11 @@
 # check function
 Rcpp::compileAttributes()
-devtools::install(build = T, upgrade = "never")
+
+{
+  sink(file = "output.log")
+  devtools::install(build = T, upgrade = "never")
+  sink()
+}
 devtools::document()
 
 library(ggplot2)
@@ -20,20 +25,19 @@ ggplot(l)+
 
 # test case 0
 a <- ecoevomove3::run_model(
-  popsize = 500,
+  popsize = 200,
   scenario = 1,
-  nItems = 5000,
-  landsize = 60,
-  nClusters = 120,
+  nItems = 450,
+  landsize = 30,
+  nClusters = 30,
   clusterSpread = 0.5,
   handling_time = 5,
   regen_time = 100,
-  tmax = 100,
-  genmax = 500,
-  cost_perception = 0.01,
+  tmax = 400,
+  genmax = 200,
   cost_bodysize = 0.01,
-  cost_move = 0.0,
-  size_scale = 1.0,
+  range_perception = 1.0,
+  range_move = 1.0,
   dispersal = 10,
   mProb = 0.01,
   mSize = 0.01,

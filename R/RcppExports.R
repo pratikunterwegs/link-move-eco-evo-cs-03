@@ -43,7 +43,7 @@ get_test_landscape <- function(nItems, landsize, nClusters, clusterSpread, regen
 #' @param mSize Controls the mutational step size, and represents the scale
 #' parameter of a Cauchy distribution. 
 #' @return An S4 class, `pathomove_output`, with simulation outcomes.
-run_model <- function(popsize, scenario, nItems, landsize, nClusters, clusterSpread, handling_time, regen_time, tmax, genmax, cost_perception, cost_bodysize, cost_move, size_scale, dispersal, nThreads, mProb, mSize) {
-    .Call(`_ecoevomove3_run_model`, popsize, scenario, nItems, landsize, nClusters, clusterSpread, handling_time, regen_time, tmax, genmax, cost_perception, cost_bodysize, cost_move, size_scale, dispersal, nThreads, mProb, mSize)
+run_model <- function(popsize, scenario, nItems, landsize, nClusters, clusterSpread, handling_time, regen_time, tmax, genmax, range_perception, cost_bodysize, range_move, dispersal, nThreads, mProb, mSize) {
+    .Call(`_ecoevomove3_run_model`, popsize, scenario, nItems, landsize, nClusters, clusterSpread, handling_time, regen_time, tmax, genmax, range_perception, cost_bodysize, range_move, dispersal, nThreads, mProb, mSize)
 }
 

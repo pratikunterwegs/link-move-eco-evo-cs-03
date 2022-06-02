@@ -17,7 +17,7 @@ struct Population {
 public:
     Population(const int popsize, const int handling_time, 
     const float range_perception, const float cost_bodysize,
-    const float range_move, const float size_scale, const int scenario) :
+    const float range_move, const int scenario) :
         // agents, positions, energy and traits
         nAgents (popsize),
         coordX (popsize, 0.0f),
@@ -48,7 +48,6 @@ public:
         
         // distance moved and movement parameters
         moved(popsize, 0.f),
-        size_scale(size_scale),
 
         // a network object
         pbsn(popsize)
@@ -87,7 +86,6 @@ public:
 
     // movement distances, costs, and size scaling
     std::vector<float> moved;
-    const float cost_move, size_scale;
 
     // position rtree
     bgi::rtree< value, bgi::quadratic<16> > agentRtree;
@@ -98,6 +96,7 @@ public:
     /// functions for the population ///
     // population order, trait and position randomiser
     void shufflePop();
+    void shufflePopBodysize();
     void setTrait (const float mSize);
     void initPos(Resources food);
 
