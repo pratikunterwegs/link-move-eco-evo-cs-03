@@ -29,7 +29,7 @@ Rcpp::List simulation::do_simulation() {
     // Rcpp::Rcout << "initialised population positions\n";
     
     Rcpp::DataFrame edgeList;
-    Rcpp::DataFrame pop_trait_data;
+    Rcpp::List pop_trait_data(genmax); // lsit to hold trait data
     // Rcpp::Rcout << "created edge list object\n";
 
     // go over gens
@@ -76,10 +76,12 @@ Rcpp::List simulation::do_simulation() {
             }
             // timestep ends here
         }
+        
+        // log trait data
+        pop_trait_data[gen] = pop.returnPopData();
 
-        // log data in the last generation
+        // log edgelist data in the last generation
         if (gen == (genmax - 1)) {
-            pop_trait_data = pop.returnPopData();
             edgeList = pop.pbsn.getNtwkDf();
         }
 
