@@ -28,7 +28,24 @@ void Population::shufflePop() {
     else {
         std::random_shuffle ( order.begin(), order.end() );
     }
-    
+
+/// function to shuffle population by bodysize
+void Population::shufflePopBodysize() {
+
+    vector<pair <int, int> > vect (nAgents, pair<int, int>);
+    for (size_t i = 0; i < static_cast<size_t>(nAgents); i++)
+    {
+        vect[i] = make_pair(bodysize[i], i);
+    }
+
+    // sort pairs by first element
+    sort(vect.begin(), vect.end());
+
+    // get sorted order.
+    for (size_t i = 0; i < static_cast<size_t>(nAgents); i++)
+    {
+        order[i] = vect[i].second;
+    }
 }
 
 // to update agent Rtree
