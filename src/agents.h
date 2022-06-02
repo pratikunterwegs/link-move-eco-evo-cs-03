@@ -16,8 +16,8 @@
 struct Population {
 public:
     Population(const int popsize, const int handling_time, 
-    const float cost_perception, const float cost_bodysize,
-    const float cost_move, const float size_scale, const int scenario) :
+    const float range_perception, const float cost_bodysize,
+    const float range_move, const float size_scale, const int scenario) :
         // agents, positions, energy and traits
         nAgents (popsize),
         coordX (popsize, 0.0f),
@@ -29,7 +29,7 @@ public:
         sF (popsize, 0.f),
         sH (popsize, 0.f),
         sN (popsize, 0.f),
-        bodysize(popsize, 10.0f),
+        bodysize(popsize, 1.0f),
         cost_bodysize(cost_bodysize),
         
         // counters for handling and social metrics
@@ -38,8 +38,8 @@ public:
 
         // agent sensory parameters
         n_samples (8.f),
-        range_perception(popsize, 1.0f),
-        cost_perception(cost_perception),
+        range_perception(range_perception),
+        range_move(range_move),
         handling_time(handling_time),
 
         // vectors for agent order
@@ -48,7 +48,6 @@ public:
         
         // distance moved and movement parameters
         moved(popsize, 0.f),
-        cost_move(cost_move),
         size_scale(size_scale),
 
         // a network object
@@ -78,8 +77,8 @@ public:
 
     // sensory range and foraging
     const float n_samples;
-    std::vector<float> range_perception;
-    const float cost_perception;
+    const float range_perception;
+    const float range_move;
     const int handling_time;
 
     // shuffle vector and transmission
@@ -105,21 +104,18 @@ public:
     // make rtree and get nearest agents and food
     void updateRtree();
 
-    int countFood (const Resources &food, const float xloc, const float yloc,
-    const float percept);
+    int countFood (const Resources &food, const float xloc, const float yloc);
     
     std::vector<int> getFoodId (
         const Resources &food,
-        const float xloc, const float yloc,
-        const float percept
+        const float xloc, const float yloc
     );
     
     std::pair<int, int > countAgents (
-        const float xloc, const float yloc, const float percept);
+        const float xloc, const float yloc);
     
     std::vector<int> getNeighbourId (
-        const float xloc, const float yloc,
-        const float percept
+        const float xloc, const float yloc
     );
 
     // functions to move and forage on a landscape
