@@ -23,7 +23,7 @@ check_simulation_output <- function(object) {
 #' Defines the `simulation_output` class.
 #'
 #' @slot parameters list.
-#' @slot trait_data data.frame.
+#' @slot trait_data list.
 #' @slot edge_list data.frame.
 #'
 #' @export
@@ -34,17 +34,37 @@ setClass(
   # define the types of the class
   slots = c(
     parameters = "list",
-    trait_data = "data.frame",
+    trait_data = "list",
     edge_list = "data.frame"
   ),
 
   # define the default values of the slots
   prototype = list(
     parameters = list(),
-    trait_data = data.frame(),
+    trait_data = list(),
     edge_list = data.frame()
   ),
 
   # check validity of class
   validity = check_simulation_output
 )
+
+#' Get trait data.
+#'
+#' @param object A `simulation_output` object.
+#'
+#' @return A `data.table` object.
+#' @export
+#'
+get_trait_data = function(object) {
+    trait_data = object@trait_data
+    trait_data = Map(
+        trait_data, seq(length(trait_data)),
+        f = function(df, g) {
+            df$gen = g
+            df
+        }
+    )
+    trait_data = data.table::rbindlist(trait_data)
+    trait_data
+}
