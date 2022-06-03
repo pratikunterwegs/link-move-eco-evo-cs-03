@@ -459,7 +459,7 @@ void Population::pickForageItem(const Resources &food, const int nThreads){
 
                         // check near items count
                         if(theseItems.size() > 0) {
-                            std::random_shuffle(theseItems.begin(), theseItems.end()); // randomise food picked
+                            // std::random_shuffle(theseItems.begin(), theseItems.end()); // randomise food picked
                             // take first item by default
                             thisItem = theseItems[0];
                             idTargetFood[i] = thisItem;
