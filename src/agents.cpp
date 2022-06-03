@@ -510,7 +510,7 @@ void Population::doForage(Resources &food) {
             // check selected item is available
             if (thisItem != -1)
             {
-                counter[id] = handling_time;
+                counter[id] = static_cast<int>(std::round(static_cast<float>(handling_time) / bodysize));
                 intake[id] += 1.0; // increased here --- not as described.
 
                 // reset food availability

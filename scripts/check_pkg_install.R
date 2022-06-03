@@ -25,7 +25,7 @@ ggplot(l)+
 
 # test case 0
 a <- ecoevomove3::run_model(
-  popsize = 200,
+  popsize = 20,
   scenario = 1,
   nItems = 450,
   landsize = 30,
