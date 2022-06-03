@@ -27,18 +27,17 @@ ggplot(l)+
 a <- ecoevomove3::run_model(
   popsize = 20,
   scenario = 1,
-  nItems = 450,
+  nItems = 1800,
   landsize = 30,
-  nClusters = 30,
+  nClusters = 180,
   clusterSpread = 0.5,
-  handling_time = 5,
   regen_time = 100,
-  tmax = 400,
-  genmax = 200,
-  cost_bodysize = 0.01,
+  genmax = 500,
+  handling_time = 5,
+  cost_bodysize = 0.0001,
   range_perception = 1.0,
   range_move = 1.0,
-  dispersal = 10,
+  dispersal = 2,
   mProb = 0.01,
   mSize = 0.01,
   nThreads = 2 # does not work with 1
@@ -46,19 +45,47 @@ a <- ecoevomove3::run_model(
 
 data = ecoevomove3::get_trait_data(a)
 
+data[gen == max(gen)] |>
+  ggplot(aes(bodysize, intake))+
+  geom_jitter()
+
 ggplot(data)+
   geom_bin2d(
     aes(
-      gen, sF
+      gen, bodysize
+
     ),
-    binwidth = c(1, 0.01)
+    binwidth = c(1, 0.001)
   )+
   scale_y_continuous(
     breaks = c(0, 10 ^ seq(4)),
     trans = ggallin::pseudolog10_trans
   )
 
-b <- ecoevomove3::make_network(a, 1)
+ggplot(data)+
+  geom_bin2d(
+    aes(
+      gen, moved
+    ),
+    binwidth = c(1, 1)
+  )
+  scale_y_continuous(
+    breaks = c(0, 10 ^ seq(4)),
+    trans = ggallin::pseudolog10_trans
+  )
 
-ecoevomove3::plot_network(b, bodysize) +
-  scale_fill_viridis_c()
+ggplot(data[gen == max(gen)])+
+  geom_jitter(
+    aes(bodysize, moved)
+  )
+
+ggplot(data[gen == max(gen)])+
+  geom_histogram(
+    aes(bodysize)
+  )
+
+ggplot(data[gen %in% c(min(gen),max(gen))])+
+  geom_jitter(
+    aes(bodysize, sH)
+  )+
+  facet_grid(~gen)
