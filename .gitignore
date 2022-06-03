@@ -37,15 +37,3 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
-
-# Documents
-docs
-data
-bash
-figure-scripts
-figures
-supplement
-inst
-jobs
-tests
-vignettes
