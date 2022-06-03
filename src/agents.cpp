@@ -33,14 +33,14 @@ void Population::shufflePop() {
 /// function to shuffle population by bodysize
 void Population::shufflePopBodysize() {
 
-    std::vector<std::pair <int, int> > vect;
+    std::vector<std::pair <float, int> > vect;
     for (size_t i = 0; i < static_cast<size_t>(nAgents); i++)
     {
         vect.push_back(std::make_pair(bodysize[i], i));
     }
 
     // sort pairs by first element
-    sort(vect.begin(), vect.end());
+    std::sort(vect.begin(), vect.end());
 
     // get sorted order.
     for (size_t i = 0; i < static_cast<size_t>(nAgents); i++)
