@@ -19,6 +19,7 @@ Rcpp::List simulation::do_simulation() {
     Rcpp::Rcout << "landscape with " << food.nClusters << " clusters\n";
 
     pop.setTrait(mSize);
+    pop.shufflePopBodysize(); // sort by bodysize after adding some variation
     Rcpp::Rcout << "pop with " << pop.nAgents << " agents for " << genmax << " gens " << tmax << " timesteps\n";
 
     // prepare scenario

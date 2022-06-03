@@ -64,6 +64,7 @@ void Population::updateRtree () {
 
 // uniform distribution for agent position, body size, and perception range
 std::uniform_real_distribution<float> agent_ran_pos(0.0f, 1.f);
+std::normal_distribution<float> agent_ran_bodysize(10.f, 0.5);
 
 // function for initial positions
 void Population::initPos(Resources food) {
@@ -86,6 +87,8 @@ void Population::setTrait(const float mSize) {
         sF[i] = agent_ran_trait(rng);
         sH[i] = agent_ran_trait(rng);
         sN[i] = agent_ran_trait(rng);
+        bodysize[i] = bodysize[i] + agent_ran_trait(rng);
+        if(bodysize[i] < 0.01f) bodysize[i] = 0.01f;
 
         // bodysize[i] = agent_ran_size(rng);
         // if(bodysize[i] < 0.001f) bodysize[i] = 0.001f;
