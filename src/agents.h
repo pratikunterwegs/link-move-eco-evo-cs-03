@@ -39,6 +39,7 @@ public:
 
         // counters for handling and social metrics
         counter (popsize, 0),
+        currentFoodChoice (popsize, 1),
         associations(popsize, 0),
 
         // agent sensory parameters
@@ -81,6 +82,7 @@ public:
 
     // counter and metrics
     std::vector<int> counter;
+    std::vector<int> currentFoodChoice;
     std::vector<int> associations; // number of total interactions
 
     // sensory range and foraging
@@ -105,17 +107,17 @@ public:
     /// functions for the population ///
     // population order, trait and position randomiser
     void shufflePop();
-    void shufflePopBodysize();
     void setTrait (const float mSize);
     void initPos(Resources food);
 
     // make rtree and get nearest agents and food
     void updateRtree();
 
-    int countFood (const Resources &food, const float xloc, const float yloc);
+    std::pair<int, int> countFood (const Resources &food, const float xloc, const float yloc);
     
     std::vector<int> getFoodId (
         const Resources &food,
+        const int foodChoice,
         const float xloc, const float yloc
     );
     
@@ -128,7 +130,7 @@ public:
 
     // functions to move and forage on a landscape
     void move_mechanistic(const Resources &food, const int nThreads);
-    void move_optimal(const Resources &food, const int nThreads);
+    void do_prey_choice(const Resources &food, const int nThreads);
     void pickForageItem(const Resources &food, const int nThreads);
     void doForage(Resources &food);
     
