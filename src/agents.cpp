@@ -496,10 +496,15 @@ void Population::Reproduce(const Resources food,
     std::discrete_distribution<> weightedLottery(vecFitness.begin(), vecFitness.end());
 
     // get parent trait based on weighted lottery
-    std::vector<float> tmp_sF (nAgents, 0.f);
+    std::vector<float> tmp_sA (nAgents, 0.f);
+    std::vector<float> tmp_sB (nAgents, 0.f);
     std::vector<float> tmp_sH (nAgents, 0.f);
     std::vector<float> tmp_sN (nAgents, 0.f);
-    std::vector<float> tmp_bodysize (nAgents, 0.01f);
+
+    std::vector<float> tmp_wA (nAgents, 0.f);
+    std::vector<float> tmp_wB (nAgents, 0.f);
+    std::vector<float> tmp_wH (nAgents, 0.f);
+    std::vector<float> tmp_wN (nAgents, 0.f);
     
     // reset associations
     associations = std::vector<int> (nAgents, 0);
@@ -517,10 +522,15 @@ void Population::Reproduce(const Resources food,
     for (int a = 0; a < nAgents; a++) {
         size_t parent_id = static_cast<size_t>(weightedLottery(rng));
 
-        tmp_sF[a] = sF[parent_id];
+        tmp_sA[a] = sA[parent_id];
+        tmp_sB[a] = sB[parent_id];
         tmp_sH[a] = sH[parent_id];
         tmp_sN[a] = sN[parent_id];
-        tmp_bodysize[a] = bodysize[parent_id];
+
+        tmp_wA[a] = wA[parent_id];
+        tmp_wB[a] = wB[parent_id];
+        tmp_wH[a] = wH[parent_id];
+        tmp_wN[a] = wN[parent_id];
 
         // inherit positions from parent
         coord_x_2[a] = coordX[parent_id] + sprout(rng);
@@ -528,9 +538,6 @@ void Population::Reproduce(const Resources food,
 
         // robustly wrap positions
         coord_x_2[a] = wrapLoc(coord_x_2[a], food.dSize);
-        coord_x_2[a] = wrapLoc(coord_x_2[a], food.dSize);
-
-        coord_y_2[a] = wrapLoc(coord_y_2[a], food.dSize);
         coord_y_2[a] = wrapLoc(coord_y_2[a], food.dSize);
 
     }
@@ -544,15 +551,20 @@ void Population::Reproduce(const Resources food,
     initX = coordX;
     initY = coordY;
 
-    // reset counter
+    // reset counter and chouce
     counter = std::vector<int> (nAgents, 0);
+    currentFoodChoice = std::vector<int> (nAgents, 1);
     assert(static_cast<int>(counter.size()) == nAgents && "counter size wrong");
 
     // mutate trait: trait shifts up or down with an equal prob
     // trait mutation prob is mProb, in a two step process
     for (int a = 0; a < nAgents; a++) {
+        // mutation of movement weights
         if(mutation_happens(rng)) {
-            tmp_sF[a] = tmp_sF[a] + mutation_size(rng);
+            tmp_sA[a] = tmp_sA[a] + mutation_size(rng);
+        }
+        if(mutation_happens(rng)) {
+            tmp_sB[a] = tmp_sB[a] + mutation_size(rng);
         }
         if(mutation_happens(rng)) {
             tmp_sH[a] = tmp_sH[a] + mutation_size(rng);
@@ -560,23 +572,35 @@ void Population::Reproduce(const Resources food,
         if(mutation_happens(rng)) {
             tmp_sN[a] = tmp_sN[a] + mutation_size(rng);
         }
-        // for bodysize
+
+        // mutation of prey choice weights
         if(mutation_happens(rng)) {
-            tmp_bodysize[a] = tmp_bodysize[a] + mutation_size(rng);
-            if(tmp_bodysize[a] < 0.001f) {
-                tmp_bodysize[a] = 0.001f;
-            }
+            tmp_wA[a] = tmp_wA[a] + mutation_size(rng);
+        }
+        if(mutation_happens(rng)) {
+            tmp_wB[a] = tmp_wB[a] + mutation_size(rng);
+        }
+        if(mutation_happens(rng)) {
+            tmp_wH[a] = tmp_wH[a] + mutation_size(rng);
+        }
+        if(mutation_happens(rng)) {
+            tmp_wN[a] = tmp_wN[a] + mutation_size(rng);
         }
     }
     
     // swap trait matrices
-    std::swap(sF, tmp_sF);
+    std::swap(sA, tmp_sA);
+    std::swap(sB, tmp_sB);
     std::swap(sH, tmp_sH);
     std::swap(sN, tmp_sN);
-    std::swap(bodysize, tmp_bodysize);
+    
+    std::swap(wA, tmp_wA);
+    std::swap(wB, tmp_wB);
+    std::swap(wH, tmp_wH);
+    std::swap(wN, tmp_wN);
 
-    tmp_sF.clear(); tmp_sH.clear(); tmp_sN.clear();
-    tmp_bodysize.clear();
+    tmp_sA.clear(); tmp_sB.clear(); tmp_sH.clear(); tmp_sN.clear();
+    tmp_wA.clear(); tmp_wB.clear(); tmp_wH.clear(); tmp_wN.clear();
     
     // swap energy
     std::vector<float> tmpEnergy (nAgents, 0.001);
