@@ -8,7 +8,9 @@
 class simulation {
 public:
     simulation(const int popsize, const int scenario,
-               const int nItems, const float landsize,
+               const int nItems,
+               const float p_type,
+               const float landsize,
                const int nClusters,
                const float clusterSpread,
                const int handling_time,
@@ -25,7 +27,7 @@ public:
         // population, food, and data structures
         pop (popsize, handling_time, range_perception,
             cost_bodysize, range_move, scenario),
-        food(nItems, landsize, nClusters, clusterSpread, regen_time),
+        food(nItems, landsize, nClusters, clusterSpread, regen_time, p_type),
         
         // eco-evolutionary parameters
         scenario(scenario),

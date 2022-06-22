@@ -19,7 +19,6 @@ Rcpp::List simulation::do_simulation() {
     Rcpp::Rcout << "landscape with " << food.nClusters << " clusters\n";
 
     pop.setTrait(mSize);
-    pop.shufflePopBodysize(); // sort by bodysize after adding some variation
     Rcpp::Rcout << "pop with " << pop.nAgents << " agents for " << genmax << " gens " << tmax << " timesteps\n";
 
     // prepare scenario
@@ -54,11 +53,8 @@ Rcpp::List simulation::do_simulation() {
             // Rcpp::Rcout << "updated r tree\n";
             
             // movement section
-            if(scenario == 0) {
-                pop.move_optimal(food, nThreads);
-            } else {
-                pop.move_mechanistic(food, nThreads);
-            }
+            pop.move_mechanistic(food, nThreads);
+            pop.do_prey_choice(food, nThreads);
             // Rcpp::Rcout << "moved\n";
 
             // if(gen == (genmax - 1)) {
@@ -89,9 +85,6 @@ Rcpp::List simulation::do_simulation() {
         // reproduce
         pop.Reproduce(food, dispersal, mProb, mSize, tmax);
 
-        // sort agents by bodysize
-        pop.shufflePopBodysize();
-
         // generation ends here
     }
     // all gens end here
@@ -115,6 +108,7 @@ Rcpp::List simulation::do_simulation() {
 //' 2 for evolved mechanistic movement.
 //' @param popsize The population size.
 //' @param nItems How many food items on the landscape.
+//' @param p_type Proportion of items of type 1.
 //' @param landsize The size of the landscape as a numeric (double).
 //' @param nClusters Number of clusters around which food is generated.
 //' @param clusterSpread How dispersed food is around the cluster centre.
@@ -138,7 +132,9 @@ Rcpp::List simulation::do_simulation() {
 //' @return An S4 class, `pathomove_output`, with simulation outcomes.
 // [[Rcpp::export]]
 S4 run_model(const int popsize, const int scenario,
-               const int nItems, const float landsize,
+               const int nItems, 
+               const float p_type,
+               const float landsize,
                const int nClusters,
                const float clusterSpread,
                const int handling_time,
@@ -154,7 +150,7 @@ S4 run_model(const int popsize, const int scenario,
                const float mSize) {
 
     // make simulation class with input parameters                            
-    simulation this_sim(popsize, scenario, nItems, landsize,
+    simulation this_sim(popsize, scenario, nItems, p_type, landsize,
         nClusters, clusterSpread, handling_time, regen_time,
         tmax, genmax, range_perception, cost_bodysize,
         range_move, dispersal, nThreads,
