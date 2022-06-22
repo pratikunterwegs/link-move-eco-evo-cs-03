@@ -459,10 +459,7 @@ void Population::countAssoc(const int nThreads) {
 /// minor function to normalise vector
 std::vector<float> Population::handleFitness(const float time) {
 
-    // the cost of maintaining bodysize and perception
-    for(int i = 0; i < nAgents; i++) {
-        energy[i] = intake[i] * (std::pow((1.f - cost_bodysize), static_cast<float>(bodysize[i])));
-    }
+    energy = intake;
 
     // sort vec fitness
     std::vector<float> vecFitness = energy;
