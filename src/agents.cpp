@@ -340,13 +340,17 @@ void Population::do_prey_choice(const Resources &food, const int nThreads) {
                         float sampleX = coordX[i];
                         float sampleY = coordY[i];
 
-                        
                         // count food and agents locally
                         std::pair<int, int> agentCounts = countAgents(sampleX, sampleY);
-                        std::pair<int, int> foodCounts = countFood(sampleX, sampleY);
+                        std::pair<int, int> foodCounts = countFood(food, sampleX, sampleY);
 
-                        currentFoodChoice[i]
+                        float prey_choice_score = (wA[i] * foodCounts.first) + (wB[i] * foodCounts.second) + 
+                            (wH[i] * agentCounts.first) + (wN[i] * agentCounts.second);
+
+                        currentFoodChoice[i] = (prey_choice_score < 0.f ? 2 : 1); // 2 is the alternative
                     }
+                }
+            }
         );
     }
 }
