@@ -30,25 +30,6 @@ void Population::shufflePop() {
     }   
 }
 
-/// function to shuffle population by bodysize
-void Population::shufflePopBodysize() {
-
-    std::vector<std::pair <float, int> > vect;
-    for (size_t i = 0; i < static_cast<size_t>(nAgents); i++)
-    {
-        vect.push_back(std::make_pair(bodysize[i], i));
-    }
-
-    // sort pairs by first element
-    std::sort(vect.begin(), vect.end());
-
-    // get sorted order.
-    for (size_t i = 0; i < static_cast<size_t>(nAgents); i++)
-    {
-        order[i] = vect[i].second;
-    }
-}
-
 // to update agent Rtree
 void Population::updateRtree () {
     // initialise rtree
@@ -64,7 +45,6 @@ void Population::updateRtree () {
 
 // uniform distribution for agent position, body size, and perception range
 std::uniform_real_distribution<float> agent_ran_pos(0.0f, 1.f);
-std::normal_distribution<float> agent_ran_bodysize(10.f, 0.5);
 
 // function for initial positions
 void Population::initPos(Resources food) {
