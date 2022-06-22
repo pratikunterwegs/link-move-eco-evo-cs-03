@@ -26,12 +26,17 @@ public:
         initY (popsize, 0.0f),
         intake (popsize, 0.001f),
         energy (popsize, 0.001f),
-        sF (popsize, 0.f),
+        
+        sA (popsize, 0.f),
+        sB (popsize, 0.f),
         sH (popsize, 0.f),
         sN (popsize, 0.f),
-        bodysize(popsize, 5.0f),
-        cost_bodysize(cost_bodysize),
         
+        wA (popsize, 0.f),
+        wB (popsize, 0.f),
+        wH (popsize, 0.f),
+        wN (popsize, 0.f),
+
         // counters for handling and social metrics
         counter (popsize, 0),
         associations(popsize, 0),
@@ -63,12 +68,16 @@ public:
     std::vector<float> intake;
     std::vector<float> energy;
     // weights
-    std::vector<float> sF;
+    std::vector<float> sA;
+    std::vector<float> sB;
     std::vector<float> sH;
     std::vector<float> sN;
-    // body size
-    std::vector<float> bodysize;
-    const float cost_bodysize;
+
+    // weights
+    std::vector<float> wA;
+    std::vector<float> wB;
+    std::vector<float> wH;
+    std::vector<float> wN;
 
     // counter and metrics
     std::vector<int> counter;

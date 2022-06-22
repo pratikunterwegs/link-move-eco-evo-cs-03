@@ -145,11 +145,12 @@ std::vector<int> Population::getNeighbourId (
 }
 
 // general function for items within distance
-int Population::countFood (
+std::pair<int, int> Population::countFood (
     const Resources &food,
     const float xloc, const float yloc) {
 
-    int nFood = 0;
+    int nFoodA = 0;
+    int nFoodB = 0;
     std::vector<value> near_food;
 
     // check any available
@@ -161,19 +162,22 @@ int Population::countFood (
 
         BOOST_FOREACH(value const& v, near_food) {
             // count only which are available!
-            if (food.available[v.second]) {
-                nFood++;
+            if (food.type[v.second] == 1) {
+                nFoodA++;
+            } else {
+                nFoodB++;
             }
         }
         near_food.clear();
     }
 
-    return nFood;
+    return std::pair<int, int> {nFoodA, nFoodB};
 }
 
 // function for the nearest available food item
 std::vector<int> Population::getFoodId (
     const Resources &food,
+    const int foodChoice,
     const float xloc, const float yloc) {
         
     std::vector<int> food_id;
@@ -188,7 +192,7 @@ std::vector<int> Population::getFoodId (
 
         BOOST_FOREACH(value const& v, near_food) {
             // count only which are available!
-            if (food.available[v.second]) {
+            if (food.available[v.second] && (food.type[v.second] == foodChoice)) {
                 food_id.push_back(v.second);
             }
         }
@@ -332,109 +336,33 @@ void Population::move_mechanistic(const Resources &food, const int nThreads) {
     }
 }
 
-// function to move optimally - where food / agents is highest
-void Population::move_optimal(const Resources &food, const int nThreads) {
-
-    float twopi = 2.f * M_PI;
-    
-    // what increment for 3 samples in a circle around the agent
-    float increment = twopi / n_samples;
-    float angle = 0.f;
-    // for this increment what angles to sample at
-    std::vector<float> sample_angles (static_cast<int>(n_samples), 0.f);
-    for (int i_ = 0; i_ < static_cast<int>(n_samples); i_++)
+/// function for current prey choice
+void Population::do_prey_choice(const Resources &food, const int nThreads) {
+    if (nThreads > 1)
     {
-        sample_angles[i_] = angle;
-        angle += increment;
-    }
+        // loop over agents --- no shuffling required here
+        tbb::task_scheduler_init _tbb(tbb::task_scheduler_init::automatic); // automatic for now
+        // try parallel foraging --- agents pick a target item
+        tbb::parallel_for(
+            tbb::blocked_range<unsigned>(1, order.size()),
+                [&](const tbb::blocked_range<unsigned>& r) {
+                for (unsigned i = r.begin(); i < r.end(); ++i) {
+                    if ((counter[i] > 0)) { 
+                        // nothing -- agent cannot forage
+                    }
+                    else {
+                        // first assess current location
+                        float sampleX = coordX[i];
+                        float sampleY = coordY[i];
 
-    // make random noise for each individual and each sample
-    std::vector<std::vector<float> > noise_v (nAgents, std::vector<float>(static_cast<int>(n_samples), 0.f));
-    for (size_t i_ = 0; i_ < noise_v.size(); i_++)
-    {
-        for (size_t j_ = 0; j_ < static_cast<size_t>(n_samples); j_++)
-        {
-            noise_v[i_][j_] = noise(rng);
-        }
-    }    
+                        
+                        // count food and agents locally
+                        std::pair<int, int> agentCounts = countAgents(sampleX, sampleY);
+                        std::pair<int, int> foodCounts = countFood(sampleX, sampleY);
 
-    // loop over agents --- randomise
-    for (int i = 0; i < nAgents; ++i) {
-        int id = order[i];
-        if (counter[id] > 0) {
-            counter[id] --;
-        }
-        else {
-            // first assess current location
-            float sampleX = coordX[id];
-            float sampleY = coordY[id];
-
-            float foodHere = 0.f;
-            // count local food only if items are available
-            if(food.nAvailable > 0) {
-                foodHere = static_cast<float>(countFood(
-                    food, sampleX, sampleY
-                ));
-            }
-            // count local handlers and non-handlers
-            std::pair<int, int> agentCounts = countAgents(sampleX, sampleY);
-            
-            // get suitability current
-            float suit_origin = (
-                (foodHere) / (static_cast<float>(agentCounts.first + agentCounts.second) + 1.0)
-            );
-
-            float newX = sampleX;
-            float newY = sampleY;
-            // now sample at three locations around
-            for(size_t j = 0; j < sample_angles.size(); j++) {
-                float t1_ = static_cast<float>(cos(sample_angles[j]));
-                float t2_ = static_cast<float>(sin(sample_angles[j]));
-                
-                // use range for agents to determine sample locs
-                sampleX = coordX[id] + (range_perception * t1_);
-                sampleY = coordY[id] + (range_perception * t2_);
-
-                // crudely wrap sampling location
-                sampleX = wrapLoc(sampleX, food.dSize);
-                sampleY = wrapLoc(sampleY, food.dSize);
-
-                // count food at sample locations if any available
-                if(food.nAvailable > 0) {
-                    foodHere = static_cast<float>(countFood(
-                        food, sampleX, sampleY
-                    ));
-                }
-                
-                // count local handlers and non-handlers
-                std::pair<int, int> agentCounts = countAgents(sampleX, sampleY);
-
-                float suit_dest = (
-                    (foodHere) / (static_cast<float>(agentCounts.first + agentCounts.second) + 1.0) +
-                    noise_v[id][j] // add same very very small noise to all
-                );
-
-                if (suit_dest > suit_origin) {
-                    // where does the individual really go --- based on
-                    // bodysize etc.
-                    newX = coordX[id] + (range_move * t1_);
-                    newY = coordY[id] + (range_move * t2_);
-
-                    // crudely wrap MOVEMENT location
-                    newX = wrapLoc(newX, food.dSize);
-                    newY = wrapLoc(newY, food.dSize);
-
-                    assert(newX < food.dSize && newX > 0.f);
-                    assert(newY < food.dSize && newY > 0.f);
-                    suit_origin = suit_dest;
-                }
-            }
-            // distance to be moved
-            moved[id] += range_move;
-
-            // set locations
-            coordX[id] = newX; coordY[id] = newY;
-        }
+                        currentFoodChoice[i]
+                    }
+        );
     }
 }
 
@@ -456,13 +384,14 @@ void Population::pickForageItem(const Resources &food, const int nThreads){
                         // nothing -- agent cannot forage or there is no food
                     }
                     else {
+
                         // find nearest item ids
-                        std::vector<int> theseItems = getFoodId(food, coordX[i], coordY[i]);
+                        std::vector<int> theseItems = getFoodId(food, currentFoodChoice[i], coordX[i], coordY[i]);
                         int thisItem = -1;
 
                         // check near items count
                         if(theseItems.size() > 0) {
-                            // std::random_shuffle(theseItems.begin(), theseItems.end()); // randomise food picked
+                            std::random_shuffle(theseItems.begin(), theseItems.end()); // randomise food picked
                             // take first item by default
                             thisItem = theseItems[0];
                             idTargetFood[i] = thisItem;
@@ -510,7 +439,7 @@ void Population::doForage(Resources &food) {
             // check selected item is available
             if (thisItem != -1)
             {
-                counter[id] = static_cast<int>(std::round(static_cast<float>(handling_time) / bodysize));
+                counter[id] = static_cast<int>(std::round(static_cast<float>(handling_time) / bodysize[id]));
                 intake[id] += 1.0; // increased here --- not as described.
 
                 // reset food availability

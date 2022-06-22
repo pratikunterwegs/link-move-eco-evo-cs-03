@@ -25,19 +25,20 @@ ggplot(l)+
 
 # test case 0
 a <- ecoevomove3::run_model(
-  popsize = 20,
+  popsize = 200,
   scenario = 1,
-  nItems = 1800,
+  nItems = 450,
   landsize = 30,
-  nClusters = 180,
+  nClusters = 90,
   clusterSpread = 0.5,
   regen_time = 100,
   genmax = 500,
+  tmax = 100,
   handling_time = 5,
-  cost_bodysize = 0.0001,
+  cost_bodysize = 0.015,
   range_perception = 1.0,
   range_move = 1.0,
-  dispersal = 2,
+  dispersal = 10,
   mProb = 0.01,
   mSize = 0.01,
   nThreads = 2 # does not work with 1
@@ -58,8 +59,8 @@ ggplot(data)+
     binwidth = c(1, 0.001)
   )+
   scale_y_continuous(
-    breaks = c(0, 10 ^ seq(4)),
-    trans = ggallin::pseudolog10_trans
+    # breaks = c(0, 10 ^ seq(4)),
+    # trans = ggallin::pseudolog10_trans
   )
 
 ggplot(data)+
