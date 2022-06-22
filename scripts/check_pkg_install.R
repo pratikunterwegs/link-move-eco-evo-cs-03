@@ -24,8 +24,6 @@ ggplot(d)+
     option = "H"
   )
 
-
-
 # check function
 Rcpp::compileAttributes()
 
@@ -43,12 +41,13 @@ l = ecoevomove3::get_test_landscape(
   landsize = 60,
   nClusters = 100,
   clusterSpread = 0.5,
-  regen_time = 100
+  regen_time = 100,
+  p_type = 0.5
 )
 
 ggplot(l)+
   geom_point(
-    aes(x, y)
+    aes(x, y, col = factor(type))
   )
 
 # test case 0
@@ -56,11 +55,12 @@ a <- ecoevomove3::run_model(
   popsize = 200,
   scenario = 1,
   nItems = 450,
+  p_type = 0.5,
   landsize = 30,
   nClusters = 90,
   clusterSpread = 0.5,
   regen_time = 100,
-  genmax = 500,
+  genmax = 100,
   tmax = 100,
   handling_time = 5,
   cost_bodysize = 0.015,
