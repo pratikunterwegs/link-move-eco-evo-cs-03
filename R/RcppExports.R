@@ -8,9 +8,10 @@
 #' @param nClusters How many clusters, an integer value.
 #' @param clusterSpread Dispersal of items around cluster centres.
 #' @param regen_time Regeneration time, in timesteps.
+#' @param p_type Proportion of type 1.
 #' @return A data frame of the evolved population traits.
-get_test_landscape <- function(nItems, landsize, nClusters, clusterSpread, regen_time) {
-    .Call(`_ecoevomove3_get_test_landscape`, nItems, landsize, nClusters, clusterSpread, regen_time)
+get_test_landscape <- function(nItems, landsize, nClusters, clusterSpread, regen_time, p_type) {
+    .Call(`_ecoevomove3_get_test_landscape`, nItems, landsize, nClusters, clusterSpread, regen_time, p_type)
 }
 
 #' Runs an exploitation competition simulation returning structured output.
@@ -22,6 +23,7 @@ get_test_landscape <- function(nItems, landsize, nClusters, clusterSpread, regen
 #' 2 for evolved mechanistic movement.
 #' @param popsize The population size.
 #' @param nItems How many food items on the landscape.
+#' @param p_type Proportion of items of type 1.
 #' @param landsize The size of the landscape as a numeric (double).
 #' @param nClusters Number of clusters around which food is generated.
 #' @param clusterSpread How dispersed food is around the cluster centre.
@@ -43,7 +45,7 @@ get_test_landscape <- function(nItems, landsize, nClusters, clusterSpread, regen
 #' @param mSize Controls the mutational step size, and represents the scale
 #' parameter of a Cauchy distribution. 
 #' @return An S4 class, `pathomove_output`, with simulation outcomes.
-run_model <- function(popsize, scenario, nItems, landsize, nClusters, clusterSpread, handling_time, regen_time, tmax, genmax, range_perception, cost_bodysize, range_move, dispersal, nThreads, mProb, mSize) {
-    .Call(`_ecoevomove3_run_model`, popsize, scenario, nItems, landsize, nClusters, clusterSpread, handling_time, regen_time, tmax, genmax, range_perception, cost_bodysize, range_move, dispersal, nThreads, mProb, mSize)
+run_model <- function(popsize, scenario, nItems, p_type, landsize, nClusters, clusterSpread, handling_time, regen_time, tmax, genmax, range_perception, cost_bodysize, range_move, dispersal, nThreads, mProb, mSize) {
+    .Call(`_ecoevomove3_run_model`, popsize, scenario, nItems, p_type, landsize, nClusters, clusterSpread, handling_time, regen_time, tmax, genmax, range_perception, cost_bodysize, range_move, dispersal, nThreads, mProb, mSize)
 }
 
