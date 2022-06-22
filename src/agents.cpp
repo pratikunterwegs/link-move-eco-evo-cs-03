@@ -243,19 +243,22 @@ void Population::move_mechanistic(const Resources &food, const int nThreads) {
                         float sampleX = coordX[id];
                         float sampleY = coordY[id];
 
-                        float foodHere = 0.f;
+                        float foodHereA = 0.f;
+                        float foodHereB = 0.f;
                         // count local food only if items are available
                         if(food.nAvailable > 0) {
-                            foodHere = static_cast<float>(countFood(
+                            std::pair<int, int> food_here_types = countFood(
                                 food, sampleX, sampleY
-                            ));
+                            );
+                            foodHereA = static_cast<float>(food_here_types.first);
+                            foodHereB = static_cast<float>(food_here_types.second);
                         }
                         // count local handlers and non-handlers
                         std::pair<int, int> agentCounts = countAgents(sampleX, sampleY);
                         
                         // get suitability current
                         float suit_origin = (
-                            (sF[id] * foodHere) + (sH[id] * agentCounts.first) +
+                            (sA[id] * foodHereA) + (sB[id] * foodHereB) + (sH[id] * agentCounts.first) +
                             (sN[id] * agentCounts.second)
                         );
 
@@ -275,16 +278,18 @@ void Population::move_mechanistic(const Resources &food, const int nThreads) {
 
                             // count food at sample locations if any available
                             if(food.nAvailable > 0) {
-                                foodHere = static_cast<float>(countFood(
+                                std::pair<int, int> food_here_types = countFood(
                                     food, sampleX, sampleY
-                                ));
+                                );
+                                foodHereA = static_cast<float>(food_here_types.first);
+                                foodHereB = static_cast<float>(food_here_types.second);
                             }
                             
                             // count local handlers and non-handlers
                             std::pair<int, int> agentCounts = countAgents(sampleX, sampleY);
 
                             float suit_dest = (
-                                (sF[id] * foodHere) + (sH[id] * agentCounts.first) +
+                                (sA[id] * foodHereA) + (sB[id] * foodHereB) + (sH[id] * agentCounts.first) +
                                 (sN[id] * agentCounts.second) +
                                 noise_v[id][j] // add same very very small noise to all
                             );
