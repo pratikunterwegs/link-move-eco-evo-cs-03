@@ -1,3 +1,31 @@
+
+# check where fitness peaks are
+library(data.table)
+library(ggplot2)
+
+t = 100
+ni = 450
+na = 300
+ht = 5
+cb = 0.05
+d = CJ(
+  b = seq(0.1, 20, 0.5),
+  intake = seq(0, t/ht) * na / ni
+)
+d[, max_in := t / (round(ht / b) + 1)]
+d = d[intake <= max_in,]
+d[, energy := intake * ((1 - cb)^b)]
+
+ggplot(d)+
+  geom_tile(
+    aes(b, intake, fill = energy)
+  )+
+  scale_fill_viridis_c(
+    option = "H"
+  )
+
+
+
 # check function
 Rcpp::compileAttributes()
 
