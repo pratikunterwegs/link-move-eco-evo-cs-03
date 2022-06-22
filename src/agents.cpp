@@ -64,16 +64,16 @@ void Population::setTrait(const float mSize) {
     std::cauchy_distribution<float> agent_ran_trait(0.f, mSize);
 
     for(int i = 0; i < nAgents; i++) {
-        sF[i] = agent_ran_trait(rng);
+        sA[i] = agent_ran_trait(rng);
+        sB[i] = agent_ran_trait(rng);
         sH[i] = agent_ran_trait(rng);
         sN[i] = agent_ran_trait(rng);
-        bodysize[i] = bodysize[i] + agent_ran_trait(rng);
-        if(bodysize[i] < 0.01f) bodysize[i] = 0.01f;
 
-        // bodysize[i] = agent_ran_size(rng);
-        // if(bodysize[i] < 0.001f) bodysize[i] = 0.001f;
-        // range_perception[i] = agent_ran_perception(rng);
-        // if(range_perception[i] < 0.001f) range_perception[i] = 0.001f;
+        wA[i] = agent_ran_trait(rng);
+        wB[i] = agent_ran_trait(rng);
+        wH[i] = agent_ran_trait(rng);
+        wN[i] = agent_ran_trait(rng);
+        
     }
 }
 
