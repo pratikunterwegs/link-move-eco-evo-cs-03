@@ -28,8 +28,9 @@ public:
               const int nClusters,
               const float clusterSpread,
               const int regen_time,
-              const int type) :
-        type(type),
+              const float p_type) :
+        p_type(p_type),
+        type(nItems, 1),
         nItems(nItems),
         dSize(landsize),
         nClusters(nClusters),
@@ -43,7 +44,8 @@ public:
     {}
     ~Resources() {}
 
-    const int type;
+    const float p_type;
+    std::vector<int> type;
     const int nItems;
     const float dSize;
     const int nClusters;

@@ -19,6 +19,8 @@ void Resources::initResources() {
     std::uniform_real_distribution<float> item_ran_pos(0.0f, dSize);
     std::normal_distribution<float> item_cluster_spread(0.0f, clusterSpread);
 
+    std::bernoulli_distribution item_type_dist (p_type);
+
     for(size_t i = 0; i < static_cast<size_t>(nClusters); i++) {
 
         centreCoordX[i] = item_ran_pos(rng);
@@ -53,6 +55,8 @@ void Resources::initResources() {
         counter[i] = distRegen(rng);
         // set all to available
         available[i] = (counter[i] == 0);
+
+        type[i] = (item_type_dist(rng) ? 1 : 2);
     }
 
     std::swap(rtree, tmpRtree);
@@ -87,22 +91,25 @@ void Resources::regenerate() {
 //' @param nClusters How many clusters, an integer value.
 //' @param clusterSpread Dispersal of items around cluster centres.
 //' @param regen_time Regeneration time, in timesteps.
+//' @param p_type Proportion of type 1.
 //' @return A data frame of the evolved population traits.
 // [[Rcpp::export]]
 Rcpp::DataFrame get_test_landscape(
         const int nItems, const float landsize,
         const int nClusters, const float clusterSpread,
-        const int regen_time) {
+        const int regen_time,
+        const float p_type) {
     
     unsigned seed = static_cast<unsigned> (std::chrono::system_clock::now().time_since_epoch().count());
     rng.seed(seed);
 
-    Resources food (nItems, landsize, nClusters, clusterSpread, regen_time);
+    Resources food (nItems, landsize, nClusters, clusterSpread, regen_time, p_type);
     food.initResources();
 
     return Rcpp::DataFrame::create(
                 Rcpp::Named("x") = food.coordX,
                 Rcpp::Named("y") = food.coordY,
-                Rcpp::Named("tAvail") = food.counter
+                Rcpp::Named("tAvail") = food.counter,
+                Rcpp::Named("type") = food.type
             );
 }
