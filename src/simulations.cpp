@@ -41,6 +41,9 @@ Rcpp::List simulation::do_simulation() {
         // reset counter and positions
         pop.counter = std::vector<int> (pop.nAgents, 0);
         
+        // THIS IS VERY NECESSARY SINCE ORDER IS RESET AFTER REPROD
+        pop.shufflePop();
+        
         // Rcpp::Rcout << "entering ecological timescale\n";
 
         // timesteps start here
@@ -68,14 +71,16 @@ Rcpp::List simulation::do_simulation() {
             pop.doForage(food);
 
             // count associations --- only in last gen
-            if(gen == (genmax - 1)) {
+            // if(gen == (genmax - 1)) {
                 pop.countAssoc(nThreads);
-            }
+            // }
             // timestep ends here
         }
         
         // log trait data
-        pop_trait_data[gen] = pop.returnPopData();
+        if((gen % 2 == 0) | (gen == (genmax - 1))) {
+            pop_trait_data[gen] = pop.returnPopData();
+        }
 
         // log edgelist data in the last generation
         if (gen == (genmax - 1)) {
@@ -142,7 +147,6 @@ S4 run_model(const int popsize, const int scenario,
                const int tmax,
                const int genmax,
                const float range_perception,
-               const float cost_bodysize,
                const float range_move,
                const float dispersal,
                const int nThreads,
@@ -152,7 +156,7 @@ S4 run_model(const int popsize, const int scenario,
     // make simulation class with input parameters                            
     simulation this_sim(popsize, scenario, nItems, p_type, landsize,
         nClusters, clusterSpread, handling_time, regen_time,
-        tmax, genmax, range_perception, cost_bodysize,
+        tmax, genmax, range_perception,
         range_move, dispersal, nThreads,
         mProb, mSize
     );

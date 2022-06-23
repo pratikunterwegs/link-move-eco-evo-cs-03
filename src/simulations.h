@@ -18,15 +18,13 @@ public:
                const int tmax,
                const int genmax,
                const float range_perception,
-               const float cost_bodysize,
                const float range_move,
                const float dispersal,
                const int nThreads,
                const float mProb,
                const float mSize):
         // population, food, and data structures
-        pop (popsize, handling_time, range_perception,
-            cost_bodysize, range_move, scenario),
+        pop (popsize, handling_time, range_perception, range_move, scenario),
         food(nItems, landsize, nClusters, clusterSpread, regen_time, p_type),
         
         // eco-evolutionary parameters
