@@ -1,32 +1,6 @@
 
-# check where fitness peaks are
-library(data.table)
-library(ggplot2)
-
-t = 100
-ni = 450
-na = 300
-ht = 5
-cb = 0.05
-d = CJ(
-  b = seq(0.1, 20, 0.5),
-  intake = seq(0, t/ht) * na / ni
-)
-d[, max_in := t / (round(ht / b) + 1)]
-d = d[intake <= max_in,]
-d[, energy := intake * ((1 - cb)^b)]
-
-ggplot(d)+
-  geom_tile(
-    aes(b, intake, fill = energy)
-  )+
-  scale_fill_viridis_c(
-    option = "H"
-  )
-
 # check function
 Rcpp::compileAttributes()
-
 {
   sink(file = "output.log")
   devtools::install(build = T, upgrade = "never")
@@ -52,18 +26,17 @@ ggplot(l)+
 
 # test case 0
 a <- ecoevomove3::run_model(
-  popsize = 200,
+  popsize = 500,
   scenario = 1,
   nItems = 450,
-  p_type = 0.5,
+  p_type = 0.2,
   landsize = 30,
-  nClusters = 90,
+  nClusters = 30,
   clusterSpread = 0.5,
-  regen_time = 100,
-  genmax = 100,
+  regen_time = 50,
+  genmax = 500,
   tmax = 100,
   handling_time = 5,
-  cost_bodysize = 0.015,
   range_perception = 1.0,
   range_move = 1.0,
   dispersal = 10,
@@ -72,49 +45,32 @@ a <- ecoevomove3::run_model(
   nThreads = 2 # does not work with 1
 )
 
-data = ecoevomove3::get_trait_data(a)
+data = get_trait_data(a)
 
-data[gen == max(gen)] |>
-  ggplot(aes(bodysize, intake))+
-  geom_jitter()
-
-ggplot(data)+
-  geom_bin2d(
-    aes(
-      gen, bodysize
-
-    ),
-    binwidth = c(1, 0.001)
+data |>
+  ggplot(
+    aes(gen, intake)
   )+
-  scale_y_continuous(
-    # breaks = c(0, 10 ^ seq(4)),
-    # trans = ggallin::pseudolog10_trans
-  )
+  stat_summary()
 
-ggplot(data)+
-  geom_bin2d(
-    aes(
-      gen, moved
-    ),
-    binwidth = c(1, 1)
-  )
-  scale_y_continuous(
-    breaks = c(0, 10 ^ seq(4)),
-    trans = ggallin::pseudolog10_trans
-  )
+get_functional_variation(data)
 
-ggplot(data[gen == max(gen)])+
-  geom_jitter(
-    aes(bodysize, moved)
-  )
-
-ggplot(data[gen == max(gen)])+
-  geom_histogram(
-    aes(bodysize)
-  )
-
-ggplot(data[gen %in% c(min(gen),max(gen))])+
-  geom_jitter(
-    aes(bodysize, sH)
+ggplot(data[gen %% 100 == 0])+
+  geom_hline(
+    yintercept = 0
   )+
-  facet_grid(~gen)
+  geom_vline(
+    xintercept = 0
+  )+
+  geom_point(
+    aes(
+      sA, sB, col = sH
+    ),
+    size = 3
+  )+
+  colorspace::scale_color_continuous_diverging(
+    palette = "Blue-Red 2", rev = T
+  )+
+  facet_grid(
+    ~gen
+  )
