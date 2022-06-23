@@ -58,8 +58,17 @@ setClass(
 #'
 get_trait_data = function(object) {
     trait_data = object@trait_data
+    gens = seq(length(trait_data))
+    
+    assertthat::assert_that(
+      length(trait_data) == length(gens)
+    )
+    gens = gens[!(sapply(trait_data, is.null))] - 1
+    trait_data = trait_data[!(sapply(trait_data, is.null))]
+    
+    
     trait_data = Map(
-        trait_data, seq(length(trait_data)),
+        trait_data, gens,
         f = function(df, g) {
             df$gen = g
             df
