@@ -8,6 +8,7 @@ run_model(
   popsize,
   scenario,
   nItems,
+  p_type,
   landsize,
   nClusters,
   clusterSpread,
@@ -16,7 +17,6 @@ run_model(
   tmax,
   genmax,
   range_perception,
-  cost_bodysize,
   range_move,
   dispersal,
   nThreads,
@@ -31,6 +31,8 @@ run_model(
 2 for evolved mechanistic movement.}
 
 \item{nItems}{How many food items on the landscape.}
+
+\item{p_type}{Proportion of items of type 1.}
 
 \item{landsize}{The size of the landscape as a numeric (double).}
 

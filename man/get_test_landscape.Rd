@@ -4,7 +4,14 @@
 \alias{get_test_landscape}
 \title{Returns a test landscape.}
 \usage{
-get_test_landscape(nItems, landsize, nClusters, clusterSpread, regen_time)
+get_test_landscape(
+  nItems,
+  landsize,
+  nClusters,
+  clusterSpread,
+  regen_time,
+  p_type
+)
 }
 \arguments{
 \item{nItems}{How many items.}
@@ -16,6 +23,8 @@ get_test_landscape(nItems, landsize, nClusters, clusterSpread, regen_time)
 \item{clusterSpread}{Dispersal of items around cluster centres.}
 
 \item{regen_time}{Regeneration time, in timesteps.}
+
+\item{p_type}{Proportion of type 1.}
 }
 \value{
 A data frame of the evolved population traits.
