@@ -323,6 +323,7 @@ void Population::move_mechanistic(const Resources &food, const int nThreads) {
 
 /// function for current prey choice
 void Population::do_prey_choice(const Resources &food, const int nThreads) {
+
     if (nThreads > 1)
     {
         // loop over agents --- no shuffling required here
@@ -418,6 +419,7 @@ void Population::doForage(Resources &food) {
     // all agents have picked a food item if they can forage
     // now forage in a serial loop --- this cannot be parallelised
     // this order is randomised
+    shufflePop();
     for (size_t i = 0; i < static_cast<size_t>(nAgents); i++)
     {
         int id = order[i];
@@ -511,6 +513,9 @@ void Population::Reproduce(const Resources food,
 
     // reset distance moved
     moved = std::vector<float> (nAgents, 0.f);
+
+    // reset order
+    order = std::vector<int> (nAgents, 1);
 
     // reset adjacency matrix
     pbsn.adjMat = Rcpp::NumericMatrix(nAgents, nAgents);

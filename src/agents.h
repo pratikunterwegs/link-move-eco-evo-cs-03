@@ -16,7 +16,7 @@
 struct Population {
 public:
     Population(const int popsize, const int handling_time, 
-    const float range_perception, const float cost_bodysize,
+    const float range_perception,
     const float range_move, const int scenario) :
         // agents, positions, energy and traits
         nAgents (popsize),
